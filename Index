@@ -1,396 +1,397 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>بوابة الاستعلام عن جدول الاختبارات</title>
-<style>
-  :root{
-    --bg1:#f7fbff;
-    --bg2:#eef5ff;
-    --card:#ffffffcc;
-    --text:#0f172a;
-    --muted:#64748b;
-    --primary:#2563eb;
-    --primary2:#1d4ed8;
-    --danger:#dc2626;
-    --danger2:#b91c1c;
-    --border:#e5e7eb;
-    --shadow:0 18px 45px rgba(2,6,23,.10);
-    --radius:18px;
-  }
-  body{
-    margin:0;
-    font-family:Tahoma,Arial,sans-serif;
-    color:var(--text);
-    background: radial-gradient(1200px 600px at 20% 10%, #dbeafe 0%, transparent 55%),
-                radial-gradient(900px 500px at 80% 0%, #e0f2fe 0%, transparent 55%),
-                linear-gradient(180deg, var(--bg2), var(--bg1));
-    min-height:100vh;
-  }
-  .wrap{
-    max-width:1180px;
-    margin:26px auto;
-    padding:0 14px;
-  }
-  .topbar{
-    background:var(--card);
-    backdrop-filter: blur(10px);
-    border:1px solid #ffffff80;
-    box-shadow:var(--shadow);
-    border-radius:22px;
-    padding:18px 18px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:14px;
-  }
-  .brand{
-    display:flex;
-    gap:12px;
-    align-items:center;
-  }
-  .logo{
-    width:56px;height:56px;
-    border-radius:16px;
-    background:linear-gradient(135deg,#e0f2fe,#dbeafe);
-    border:1px solid #ffffff;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-weight:800;
-    color:#0b3ea8;
-  }
-  .title h1{
-    margin:0;
-    font-size:22px;
-    letter-spacing:.2px;
-  }
-  .title .sub{
-    margin-top:4px;
-    font-size:13px;
-    color:var(--muted);
-  }
-  .pills{
-    display:flex;
-    gap:10px;
-    flex-wrap:wrap;
-    justify-content:flex-start;
-  }
-  .pill{
-    border:1px solid var(--border);
-    background:#fff;
-    padding:8px 12px;
-    border-radius:999px;
-    font-size:13px;
-    color:#1f2937;
-  }
-
-  .card{
-    margin-top:18px;
-    background:var(--card);
-    border:1px solid #ffffff80;
-    backdrop-filter: blur(10px);
-    box-shadow:var(--shadow);
-    border-radius:var(--radius);
-    padding:18px;
-  }
-
-  .row{
-    display:flex;
-    gap:12px;
-    align-items:center;
-    justify-content:center;
-    flex-wrap:wrap;
-  }
-  input{
-    width:min(720px, 92vw);
-    padding:14px 14px;
-    border-radius:16px;
-    border:1px solid var(--border);
-    font-size:16px;
-    outline:none;
-  }
-  input:focus{ border-color:#93c5fd; box-shadow:0 0 0 4px rgba(59,130,246,.12); }
-  .btn{
-    padding:12px 16px;
-    border-radius:14px;
-    border:none;
-    cursor:pointer;
-    font-size:15px;
-    font-weight:700;
-    background:var(--primary);
-    color:#fff;
-  }
-  .btn:hover{ background:var(--primary2); }
-  .hint{
-    text-align:center;
-    margin-top:10px;
-    color:var(--muted);
-    font-size:13px;
-  }
-
-  .info{
-    margin-top:14px;
-    background:linear-gradient(180deg,#eff6ff,#ffffff);
-    border:1px solid #dbeafe;
-    padding:14px;
-    border-radius:16px;
-    display:flex;
-    gap:12px;
-    flex-wrap:wrap;
-    justify-content:space-between;
-  }
-  .info .box{
-    flex:1;
-    min-width:240px;
-    background:#fff;
-    border:1px solid var(--border);
-    border-radius:14px;
-    padding:12px;
-  }
-  .info .label{ font-size:12px; color:var(--muted); }
-  .info .value{ font-size:18px; font-weight:800; margin-top:6px; }
-
-  table{
-    width:100%;
-    border-collapse:separate;
-    border-spacing:0;
-    margin-top:14px;
-    overflow:hidden;
-    border-radius:16px;
-    border:1px solid var(--border);
-    background:#fff;
-  }
-  th,td{
-    padding:12px 10px;
-    text-align:center;
-    border-bottom:1px solid var(--border);
-    vertical-align:top;
-    font-size:14px;
-  }
-  th{
-    background:#f8fafc;
-    font-weight:800;
-  }
-  tr:last-child td{ border-bottom:none; }
-  td.day{
-    font-weight:800;
-    background:#f8fafc;
-    width:160px;
-  }
-  .slot{
-    display:flex;
-    flex-direction:column;
-    gap:8px;
-    align-items:center;
-  }
-  .course{
-    width:100%;
-    border:1px solid var(--border);
-    border-radius:12px;
-    padding:10px 10px;
-    background:#fff;
-  }
-  .course .name{ font-weight:800; }
-  .course .status{ font-size:12px; color:var(--muted); margin-top:4px; }
-  .forbidden{
-    border-color:#fecaca;
-    background:#fff1f2;
-  }
-  .forbidden .status{ color:#991b1b; font-weight:800; }
-  .conflictNote{
-    margin-top:8px;
-    font-size:12px;
-    font-weight:900;
-    color:#b91c1c;
-  }
-  .nodata{
-    margin-top:14px;
-    background:#fff1f2;
-    border:1px solid #fecaca;
-    color:#991b1b;
-    padding:12px;
-    border-radius:14px;
-    text-align:center;
-    font-weight:800;
-    white-space:pre-line;
-  }
-  .footer{
-    text-align:center;
-    margin:18px 0 8px;
-    color:var(--muted);
-    font-size:12px;
-  }
-</style>
-</head>
-<body>
-  <div class="wrap">
-    <div class="topbar">
-      <div class="brand">
-        <div class="logo">TVTC</div>
-        <div class="title">
-          <h1>بوابة الاستعلام عن جدول الاختبارات</h1>
-          <div class="sub">الكلية التقنية بالفرشة — بيانات من Google Sheets عبر Apps Script</div>
-        </div>
-      </div>
-      <div class="pills">
-        <div class="pill">المؤسسة: TVTC</div>
-        <div class="pill">التشغيل: GitHub Pages</div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="row">
-        <input id="traineeId" placeholder="أدخل الرقم التدريبي" inputmode="numeric" />
-        <button class="btn" onclick="searchTrainee()">بحث</button>
-      </div>
-      <div class="hint">ملاحظة: إذا كانت حالة المقرر (حرمان/مطوي قيده) سيظهر تنبيه بعدم دخول الاختبار.</div>
-
-      <div id="studentResult"></div>
-
-      <div class="footer">إذا واجهت عدم ظهور نتيجة، حدّث الصفحة (Ctrl+F5) بعد تحديث Deploy في Apps Script.</div>
-    </div>
-  </div>
-
-<script>
-const API_URL = "https://script.google.com/macros/s/AKfycbwXBBqk55pwYg4D7cCu0yXfX9kc2hvGMrmxmsszYGVpFPonq9NI9WLTTlDtL8k9r0oYvQ/exec";
-
-function esc(s){
-  return String(s ?? "").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-}
-
-function jsonp(url){
-  return new Promise((resolve, reject) => {
-    const cb = "cb_" + Date.now() + "_" + Math.floor(Math.random()*100000);
-    const script = document.createElement("script");
-    const sep = url.includes("?") ? "&" : "?";
-
-    window[cb] = (data) => {
-      try { resolve(data); }
-      finally {
-        delete window[cb];
-        script.remove();
-      }
-    };
-
-    script.onerror = () => {
-      delete window[cb];
-      script.remove();
-      reject(new Error("JSONP failed"));
-    };
-
-    script.src = url + sep + "callback=" + encodeURIComponent(cb);
-    document.body.appendChild(script);
-  });
-}
-
-async function searchTrainee(){
-  const id = document.getElementById("traineeId").value.trim();
-  const box = document.getElementById("studentResult");
-  box.innerHTML = "جاري البحث...";
-
-  if(!id){
-    box.innerHTML = `<div class="nodata">من فضلك أدخل الرقم التدريبي</div>`;
-    return;
-  }
-
-  try{
-    const data = await jsonp(`${API_URL}?id=${encodeURIComponent(id)}`);
-
-    if(!data || !data.ok){
-      box.innerHTML = `<div class="nodata">${esc((data && data.message) || "لا توجد بيانات")}</div>`;
-      return;
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>صفحة استعلام المتدرب</title>
+  <style>
+    :root{
+      --bg:#0f3a4a;
+      --bg2:#0b2c38;
+      --card:#0d3543cc;
+      --line:#6fd1d6;
+      --btn:#2aa9b0;
+      --btn2:#1f8f95;
+      --white:#fff;
+      --muted:#cfe9ea;
+      --danger:#ffb3b3;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: Tahoma, Arial, sans-serif;
+      background: radial-gradient(circle at 30% 20%, #184e61 0, var(--bg) 35%, var(--bg2) 100%);
+      color:var(--white);
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:18px;
+    }
+    /* خلفية خطوط خفيفة */
+    body:before{
+      content:"";
+      position:fixed; inset:0;
+      background:
+        radial-gradient(circle, rgba(255,255,255,.06) 1px, transparent 1px) 0 0/38px 38px,
+        radial-gradient(circle, rgba(255,255,255,.04) 1px, transparent 1px) 18px 18px/38px 38px;
+      opacity:.35;
+      pointer-events:none;
     }
 
-    box.innerHTML = renderScheduleTable(data);
+    .app{
+      width:min(980px, 96vw);
+    }
 
-  }catch(err){
-    box.innerHTML = `<div class="nodata">
-فشل الاتصال بالخادم.
-- تأكد أن رابط API_URL صحيح (exec)
-- تأكد Deploy: Who has access = Anyone
-- حدّث الصفحة Ctrl+F5
-</div>`;
-  }
-}
+    .screen{
+      display:none;
+      animation: fade .25s ease;
+    }
+    .screen.active{display:block}
+    @keyframes fade{from{opacity:.6; transform:translateY(6px)}to{opacity:1; transform:none}}
 
-function renderScheduleTable(data){
-  const days = Array.isArray(data.days) ? data.days : [];
+    .title{
+      text-align:center;
+      font-size:34px;
+      font-weight:700;
+      letter-spacing:.2px;
+      margin:0 0 18px 0;
+    }
 
-  let html = `
-    <div class="info">
-      <div class="box">
-        <div class="label">اسم المتدرب</div>
-        <div class="value">${esc(data.traineeName)}</div>
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:22px;
+      padding:18px;
+      box-shadow: 0 18px 45px rgba(0,0,0,.25);
+      backdrop-filter: blur(8px);
+    }
+
+    /* شاشة البحث */
+    .searchWrap{
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+      align-items:center;
+      padding:26px 14px;
+    }
+    .inputRow{
+      width:min(560px, 92%);
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+    .label{
+      font-size:22px;
+      font-weight:700;
+      white-space:nowrap;
+    }
+    input{
+      flex:1;
+      height:56px;
+      border-radius:28px;
+      border:2px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.10);
+      color:var(--white);
+      padding:0 18px;
+      font-size:20px;
+      outline:none;
+    }
+    input::placeholder{color:rgba(255,255,255,.55)}
+    input:focus{border-color:rgba(111,209,214,.65)}
+
+    .btn{
+      border:none;
+      cursor:pointer;
+      color:#08323a;
+      font-weight:900;
+      font-size:20px;
+      padding:10px 34px;
+      border-radius:28px;
+      background: linear-gradient(180deg, #4ad5dd, #179aa3);
+      box-shadow: 0 10px 20px rgba(0,0,0,.25);
+      transition:.15s transform ease, .15s filter ease;
+    }
+    .btn:active{transform:scale(.98)}
+    .btn:hover{filter:brightness(1.06)}
+    .hint{
+      text-align:center;
+      color:rgba(255,255,255,.75);
+      font-size:14px;
+      margin-top:4px;
+    }
+    .error{
+      margin-top:6px;
+      color:var(--danger);
+      font-weight:700;
+      display:none;
+      text-align:center;
+    }
+
+    /* شاشة الخدمات */
+    .topBar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:12px;
+    }
+    .homeBtn{
+      width:56px; height:56px;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.10);
+      color:var(--white);
+      cursor:pointer;
+      font-size:22px;
+      display:flex; align-items:center; justify-content:center;
+      transition:.15s ease;
+    }
+    .homeBtn:hover{background:rgba(255,255,255,.14)}
+    .infoBox{
+      padding:14px 16px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.10);
+      margin-bottom:16px;
+      display:grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap:10px;
+    }
+    .infoItem{
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:16px;
+      padding:12px;
+      min-height:68px;
+    }
+    .infoItem .k{color:rgba(255,255,255,.72); font-size:13px; margin-bottom:6px}
+    .infoItem .v{font-size:18px; font-weight:800}
+
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:14px;
+      padding:10px 0 4px;
+    }
+    .serviceBtn{
+      border:none;
+      cursor:pointer;
+      padding:18px 10px;
+      border-radius:18px;
+      background: linear-gradient(180deg, #35b8bf, #1f8f95);
+      color:#073039;
+      font-weight:900;
+      font-size:20px;
+      box-shadow: 0 12px 22px rgba(0,0,0,.22);
+      transition:.15s transform ease, .15s filter ease;
+    }
+    .serviceBtn:hover{filter:brightness(1.06)}
+    .serviceBtn:active{transform:scale(.985)}
+
+    .footerNote{
+      margin-top:10px;
+      text-align:center;
+      color:rgba(255,255,255,.70);
+      font-size:13px;
+    }
+
+    @media (max-width:760px){
+      .title{font-size:28px}
+      .label{font-size:18px}
+      input{font-size:18px}
+      .infoBox{grid-template-columns:1fr}
+      .grid{grid-template-columns: repeat(2, 1fr)}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+
+    <!-- شاشة 1: إدخال الرقم التدريبي -->
+    <section id="screenLogin" class="screen active">
+      <h1 class="title">صفحة استعلام المتدرب</h1>
+      <div class="card searchWrap">
+        <div class="inputRow">
+          <div class="label">الرقم التدريبي</div>
+          <input id="traineeId" inputmode="numeric" autocomplete="off" placeholder="اكتب رقمك التدريبي" />
+        </div>
+        <button class="btn" id="btnSearch">بحث</button>
+        <div class="hint">يمكنك لاحقًا ربط البحث بملف Google Sheet</div>
+        <div class="error" id="errBox">لم يتم العثور على متدرب بهذا الرقم.</div>
       </div>
-      <div class="box">
-        <div class="label">الرقم التدريبي</div>
-        <div class="value">${esc(data.traineeId)}</div>
+    </section>
+
+    <!-- شاشة 2: قائمة الخدمات + بيانات المتدرب -->
+    <section id="screenDashboard" class="screen">
+      <div class="topBar">
+        <h1 class="title" style="margin:0; font-size:28px;">الخدمات</h1>
+        <button class="homeBtn" id="btnHome" title="رجوع">⌂</button>
       </div>
-    </div>
-  `;
 
-  if(days.length === 0){
-    html += `<div class="nodata">لا يوجد جدول اختبارات لهذا المتدرب.</div>`;
-    return html;
-  }
+      <div class="card">
+        <div class="infoBox">
+          <div class="infoItem">
+            <div class="k">اسم المتدرب</div>
+            <div class="v" id="vName">-</div>
+          </div>
+          <div class="infoItem">
+            <div class="k">الرقم التدريبي</div>
+            <div class="v" id="vId">-</div>
+          </div>
+          <div class="infoItem">
+            <div class="k">المرشد الأكاديمي</div>
+            <div class="v" id="vAdvisor">-</div>
+          </div>
+        </div>
 
-  html += `
-    <table>
-      <thead>
-        <tr>
-          <th>اليوم</th>
-          <th>الفترة الأولى <div style="font-size:12px;color:#64748b;margin-top:4px;">8:30 إلى 10:00</div></th>
-          <th>الفترة الثانية <div style="font-size:12px;color:#64748b;margin-top:4px;">10:30 إلى 12:00</div></th>
-          <th>الفترة الثالثة <div style="font-size:12px;color:#64748b;margin-top:4px;">12:00 إلى 12:30</div></th>
-        </tr>
-      </thead>
-      <tbody>
-  `;
+        <div class="grid">
+          <button class="serviceBtn" data-service="الجدول">الجدول</button>
+          <button class="serviceBtn" data-service="الأنشطة">الانشطة</button>
+          <button class="serviceBtn" data-service="الأعذار">الأعذار</button>
+          <button class="serviceBtn" data-service="البيانات">البيانات</button>
+          <button class="serviceBtn" data-service="التواصل">التواصل</button>
+          <button class="serviceBtn" data-service="المخالفات">المخالفات</button>
+        </div>
 
-  days.forEach(d=>{
-    html += `<tr>`;
-    html += `<td class="day">${esc(d.dayLabel)}</td>`;
+        <div class="footerNote" id="noteArea">
+          اختر خدمة من القائمة (حالياً مثال — لاحقاً نربط كل زر بصفحته/بياناته).
+        </div>
+      </div>
+    </section>
 
-    [1,2,3].forEach(p=>{
-      const slot = (d.periods && d.periods[p]) ? d.periods[p] : [];
-      if(!slot.length){
-        html += `<td>-</td>`;
+  </div>
+
+  <script>
+    /***********************
+     * 1) مصدر البيانات
+     * - الآن: بيانات تجريبية محلية
+     * - لاحقاً: اربطها بـ API من Google Apps Script أو Firebase
+     ************************/
+    const LOCAL_DB = {
+      "441234567": { name: "أحمد محمد", advisor: "م. خالد القحطاني" },
+      "551112223": { name: "سلمان علي", advisor: "أ. ناصر الشهري" }
+    };
+
+    // لو عندك API لاحقاً ضع الرابط هنا (واتركه فارغ الآن)
+    const API_URL = ""; // مثال: "https://script.google.com/macros/s/XXXXX/exec"
+
+    async function fetchTrainee(id){
+      // 1) إذا يوجد API فعلي
+      if (API_URL && API_URL.startsWith("http")) {
+        const url = API_URL + "?action=trainee&id=" + encodeURIComponent(id);
+        const res = await fetch(url, { method:"GET" });
+        const data = await res.json();
+        if (data && data.ok && data.trainee) return data.trainee; // {name, id, advisor}
+        return null;
+      }
+
+      // 2) fallback بيانات محلية
+      if (LOCAL_DB[id]) {
+        return { id, name: LOCAL_DB[id].name, advisor: LOCAL_DB[id].advisor };
+      }
+      return null;
+    }
+
+    /***********************
+     * 2) تنقل بين الشاشتين
+     ************************/
+    const screenLogin = document.getElementById("screenLogin");
+    const screenDashboard = document.getElementById("screenDashboard");
+    const errBox = document.getElementById("errBox");
+
+    function show(screen){
+      screenLogin.classList.remove("active");
+      screenDashboard.classList.remove("active");
+      screen.classList.add("active");
+    }
+
+    function setError(msg, showIt=true){
+      errBox.textContent = msg;
+      errBox.style.display = showIt ? "block" : "none";
+    }
+
+    /***********************
+     * 3) عناصر الشاشة
+     ************************/
+    const traineeId = document.getElementById("traineeId");
+    const btnSearch = document.getElementById("btnSearch");
+    const btnHome = document.getElementById("btnHome");
+
+    const vName = document.getElementById("vName");
+    const vId = document.getElementById("vId");
+    const vAdvisor = document.getElementById("vAdvisor");
+    const noteArea = document.getElementById("noteArea");
+
+    function renderTrainee(t){
+      vName.textContent = t.name || "-";
+      vId.textContent = t.id || "-";
+      vAdvisor.textContent = t.advisor || "-";
+    }
+
+    async function doSearch(){
+      const id = (traineeId.value || "").trim();
+      setError("", false);
+
+      if (!id || id.length < 6) {
+        setError("اكتب رقم تدريبي صحيح.");
         return;
       }
 
-      const hasConflict = slot.length > 1;
-      html += `<td><div class="slot">`;
-
-      slot.forEach((c, idx)=>{
-        const forbidden = !!c.forbidden;
-        html += `
-          <div class="course ${forbidden ? 'forbidden':''}">
-            <div class="name">${esc(c.courseName)}</div>
-            <div class="status">${esc(c.status || '')}${forbidden ? ' — لا يمكن دخول الاختبار' : ''}</div>
-          </div>
-        `;
-      });
-
-      if(hasConflict){
-        html += `<div class="conflictNote">تنبيه: لديك أكثر من مقرر في نفس الفترة.</div>`;
+      btnSearch.disabled = true;
+      btnSearch.textContent = "جارٍ البحث...";
+      try{
+        const t = await fetchTrainee(id);
+        if (!t) {
+          setError("لم يتم العثور على متدرب بهذا الرقم.");
+          return;
+        }
+        // حفظ بسيط للجلسة
+        localStorage.setItem("trainee_session", JSON.stringify(t));
+        renderTrainee(t);
+        show(screenDashboard);
+      }catch(e){
+        console.error(e);
+        setError("تعذر الاتصال بمصدر البيانات.");
+      }finally{
+        btnSearch.disabled = false;
+        btnSearch.textContent = "بحث";
       }
+    }
 
-      html += `</div></td>`;
+    btnSearch.addEventListener("click", doSearch);
+    traineeId.addEventListener("keydown", (e)=>{ if(e.key==="Enter") doSearch(); });
+
+    btnHome.addEventListener("click", ()=>{
+      localStorage.removeItem("trainee_session");
+      traineeId.value = "";
+      setError("", false);
+      show(screenLogin);
     });
 
-    html += `</tr>`;
-  });
+    // أزرار الخدمات
+    document.querySelectorAll(".serviceBtn").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        const service = btn.dataset.service;
+        noteArea.textContent = "تم اختيار خدمة: " + service + " (اربطها لاحقاً بصفحة/بيانات).";
+      });
+    });
 
-  html += `</tbody></table>`;
-  return html;
-}
-
-// Enter = بحث
-document.getElementById("traineeId").addEventListener("keyup", function(e){
-  if(e.key === "Enter") searchTrainee();
-});
-</script>
+    // استرجاع جلسة إن وجدت
+    (function boot(){
+      const saved = localStorage.getItem("trainee_session");
+      if (saved) {
+        try{
+          const t = JSON.parse(saved);
+          if (t && t.id) {
+            renderTrainee(t);
+            show(screenDashboard);
+            return;
+          }
+        }catch(_){}
+      }
+      show(screenLogin);
+    })();
+  </script>
 </body>
 </html>
