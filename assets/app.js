@@ -1,7 +1,7 @@
 /***************
  * 1) ضع رابط Apps Script Web App هنا
  ***************/
-const API_URL = "PUT_YOUR_WEBAPP_URL_HERE"; // مثال: https://script.google.com/macros/s/XXXX/exec
+const API_URL = "https://script.google.com/macros/s/AKfycbw2LRgNheF2j1-b0R7SoLXgIirYyEc49AOoY6RJ33kKkA8jpuGFO3ByvdQ5CeKr7BNZMg/exec"; // مثال: https://script.google.com/macros/s/XXXX/exec
 
 /***************
  * 2) أدوات عامة
