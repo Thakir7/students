@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>لوحة خدمات المتدرب</title>
+  <title>الخدمات</title>
   <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
   <div class="app">
     <div class="topBar">
-      <h1 class="title" style="margin:0; font-size:28px;">الخدمات</h1>
-      <button class="homeBtn" id="btnLogout" title="خروج">⎋</button>
+      <h1 class="title">الخدمات</h1>
+      <button class="miniBtn" id="btnHome" title="الرئيسية" onclick="location.href='dashboard.html'">⌂</button>
     </div>
 
     <div class="card">
@@ -29,27 +29,48 @@
         </div>
       </div>
 
+      <!-- ✅ أزرار الخدمات (مربوطة فعلياً بصفحاتك) -->
       <div class="gridBtns">
-  <a class="bigBtn" href="schedule.html">الجدول</a>
-  <a class="bigBtn" href="activities.html">الأنشطة</a>
-  <a class="bigBtn" href="excuses.html">الأعذار</a>
-  <a class="bigBtn" href="violations.html">المخالفات</a>
-  <a class="bigBtn" href="contact.html">التواصل</a>
-  <a class="bigBtn" href="profile.html">البيانات</a>
-</div>
-
+        <a class="bigBtn" href="schedule.html">الجدول</a>
+        <a class="bigBtn" href="activities.html">الأنشطة</a>
+        <a class="bigBtn" href="excuses.html">الأعذار</a>
+        <a class="bigBtn" href="violations.html">المخالفات</a>
+        <a class="bigBtn" href="contact.html">التواصل</a>
+        <a class="bigBtn" href="profile.html">البيانات</a>
+      </div>
 
       <div class="hint">اضغط على أي خدمة لعرض بياناتها</div>
+
+      <div class="actionsRow">
+        <button class="miniBtn" id="btnLogout">تسجيل خروج</button>
+      </div>
+
+      <div class="error" id="errBox" style="display:none;"></div>
     </div>
   </div>
 
-  <script src="assets/app.js"></script>
+  <script src="assets/app.js?v=9999"></script>
   <script>
-    renderHeaderSession();
+    // ✅ تأكد من وجود جلسة
+    const s = requireSession();
+    if (!s) throw new Error("no session");
 
+    fillHeaderFromSession();
+
+    // ✅ تحديث بيانات المتدرب مرة واحدة (بدون تعليق/تحديث مستمر)
+    (async ()=>{
+      try{
+        const fresh = await searchTraineeById(s.id);
+        if (fresh) { saveSession(fresh); fillHeaderFromSession(); }
+      }catch(e){
+        console.error(e);
+      }
+    })();
+
+    // ✅ تسجيل خروج
     qs("btnLogout").addEventListener("click", ()=>{
       clearSession();
-      window.location.href = "index.html";
+      location.replace("index.html");
     });
   </script>
 </body>
