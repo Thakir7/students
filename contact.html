@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>التواصل</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <div class="app">
+    <div class="topBar">
+      <h1 class="title" style="margin:0; font-size:28px;">التواصل</h1>
+      <button class="homeBtn" id="btnHome" title="الرئيسية">⌂</button>
+    </div>
+
+    <div class="card">
+      <div class="infoBox">
+        <div class="infoItem"><div class="k">اسم المتدرب</div><div class="v" id="vName">-</div></div>
+        <div class="infoItem"><div class="k">الرقم التدريبي</div><div class="v" id="vId">-</div></div>
+        <div class="infoItem"><div class="k">المرشد الأكاديمي</div><div class="v" id="vAdvisor">-</div></div>
+      </div>
+
+      <div class="error" id="errBox"></div>
+
+      <div class="tableWrap">
+        <table id="tbl"><thead></thead><tbody></tbody></table>
+      </div>
+
+      <div class="hint">يمكن لاحقًا إضافة زر واتساب أو بريد المرشد</div>
+    </div>
+  </div>
+
+  <script src="assets/app.js"></script>
+  <script>
+    renderHeaderSession();
+    qs("btnHome").addEventListener("click", ()=> window.location.href="dashboard.html");
+
+    (async function(){
+      const s = requireSession(); if(!s) return;
+      try{
+        const data = await getContact(s.id);
+        if(!data?.ok){ showError("errBox", data?.message || "لا توجد بيانات."); return; }
+        const columns = [
+          { key:"type", label:"النوع" },
+          { key:"value", label:"البيان" }
+        ];
+        renderTable("tbl", columns, data.rows || []);
+      }catch(e){
+        console.error(e);
+        showError("errBox","تعذر الاتصال بالخادم.");
+      }
+    })();
+  </script>
+</body>
+</html>
