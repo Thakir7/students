@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>لوحة خدمات المتدرب</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <div class="app">
+    <div class="topBar">
+      <h1 class="title" style="margin:0; font-size:28px;">الخدمات</h1>
+      <button class="homeBtn" id="btnLogout" title="خروج">⎋</button>
+    </div>
+
+    <div class="card">
+      <div class="infoBox">
+        <div class="infoItem">
+          <div class="k">اسم المتدرب</div>
+          <div class="v" id="vName">-</div>
+        </div>
+        <div class="infoItem">
+          <div class="k">الرقم التدريبي</div>
+          <div class="v" id="vId">-</div>
+        </div>
+        <div class="infoItem">
+          <div class="k">المرشد الأكاديمي</div>
+          <div class="v" id="vAdvisor">-</div>
+        </div>
+      </div>
+
+      <div class="grid">
+        <a class="navBtn" href="schedule.html">الجدول</a>
+        <a class="navBtn" href="activities.html">الأنشطة</a>
+        <a class="navBtn" href="excuses.html">الأعذار</a>
+        <a class="navBtn" href="profile.html">البيانات</a>
+        <a class="navBtn" href="contact.html">التواصل</a>
+        <a class="navBtn" href="violations.html">المخالفات</a>
+      </div>
+
+      <div class="hint">اضغط على أي خدمة لعرض بياناتها</div>
+    </div>
+  </div>
+
+  <script src="assets/app.js"></script>
+  <script>
+    renderHeaderSession();
+
+    qs("btnLogout").addEventListener("click", ()=>{
+      clearSession();
+      window.location.href = "index.html";
+    });
+  </script>
+</body>
+</html>
