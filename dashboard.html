@@ -5,7 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>الخدمات</title>
   <link rel="stylesheet" href="assets/style.css">
+
+  <!-- ✅ FIX: منع أي طبقات فوقية من تعطيل النقر + رفع الأزرار فوق كل شيء -->
+  <style>
+    /* تعطيل أي pseudo overlay فوق الصفحة */
+    body::before, body::after,
+    .app::before, .app::after,
+    .card::before, .card::after {
+      pointer-events: none !important;
+    }
+
+    /* تأكيد أن محتوى البطاقة والأزرار قابلة للنقر */
+    .card, .gridBtns, .bigBtn, a.bigBtn, button.bigBtn {
+      pointer-events: auto !important;
+    }
+
+    /* رفع الأزرار فوق أي طبقة */
+    .card { position: relative; z-index: 5; }
+    .gridBtns { position: relative; z-index: 6; }
+    .bigBtn { position: relative; z-index: 7; cursor: pointer; }
+  </style>
 </head>
+
 <body>
   <div class="app">
     <div class="topBar">
@@ -29,14 +50,14 @@
         </div>
       </div>
 
-      <!-- ✅ أزرار الخدمات (مربوطة فعلياً بصفحاتك) -->
+      <!-- ✅ أزرار الخدمات -->
       <div class="gridBtns">
-        <a class="bigBtn" href="schedule.html">الجدول</a>
-        <a class="bigBtn" href="activities.html">الأنشطة</a>
-        <a class="bigBtn" href="excuses.html">الأعذار</a>
-        <a class="bigBtn" href="violations.html">المخالفات</a>
-        <a class="bigBtn" href="contact.html">التواصل</a>
-        <a class="bigBtn" href="profile.html">البيانات</a>
+        <button class="bigBtn" data-go="schedule.html">الجدول</button>
+        <button class="bigBtn" data-go="activities.html">الأنشطة</button>
+        <button class="bigBtn" data-go="excuses.html">الأعذار</button>
+        <button class="bigBtn" data-go="violations.html">المخالفات</button>
+        <button class="bigBtn" data-go="contact.html">التواصل</button>
+        <button class="bigBtn" data-go="profile.html">البيانات</button>
       </div>
 
       <div class="hint">اضغط على أي خدمة لعرض بياناتها</div>
@@ -55,10 +76,10 @@
     const s = requireSession();
     if (!s) throw new Error("no session");
 
-    // ✅ عرض الهيدر من الجلسة
+    // ✅ تعبئة الهيدر
     fillHeaderFromSession();
 
-    // ✅ تحديث بيانات المتدرب مرة واحدة (بدون تعليق/تحديث مستمر)
+    // ✅ تحديث بيانات المتدرب مرة واحدة
     (async ()=>{
       try{
         const fresh = await searchTraineeById(s.id);
@@ -73,23 +94,16 @@
       clearSession();
       location.replace("index.html");
     });
-  </script>
 
-  <!-- ✅ حل قاطع: إجبار فتح الصفحة حتى لو فيه كود قديم يمنع الانتقال ويطبع "تم اختيار خدمة..." -->
-  <script>
-    document.addEventListener("click", function (e) {
-      const a = e.target.closest("a.bigBtn");
-      if (!a) return;
-
-      const href = a.getAttribute("href");
-      if (!href) return;
-
-      e.preventDefault();
-      e.stopPropagation();
-      if (e.stopImmediatePropagation) e.stopImmediatePropagation();
-
-      window.location.href = href;
-    }, true);
+    // ✅ FIX قاطع: ربط ضغط الأزرار مباشرة بالانتقال
+    document.querySelectorAll(".bigBtn[data-go]").forEach(btn=>{
+      btn.addEventListener("click", (e)=>{
+        e.preventDefault();
+        e.stopPropagation();
+        const go = btn.getAttribute("data-go");
+        if (go) window.location.href = go;
+      });
+    });
   </script>
 </body>
 </html>
