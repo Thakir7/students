@@ -20,7 +20,7 @@
         <div class="infoItem"><div class="k">المرشد الأكاديمي</div><div class="v" id="vAdvisor">-</div></div>
       </div>
 
-      <div class="error" id="errBox"></div>
+      <div class="error" id="errBox" style="display:none;"></div>
 
       <div class="tableWrap">
         <table id="tbl"><thead></thead><tbody></tbody></table>
@@ -28,9 +28,9 @@
     </div>
   </div>
 
-  <script src="assets/app.js"></script>
+  <script src="assets/app.js?v=20260206"></script>
   <script>
-    renderHeaderSession();
+    fillHeaderFromSession();
     qs("btnHome").addEventListener("click", ()=> window.location.href="dashboard.html");
 
     (async function(){
@@ -41,7 +41,7 @@
         const columns = [
           { key:"date", label:"التاريخ" },
           { key:"violation", label:"المخالفة" },
-          { key:"points", label:"النقاط" },
+          { key:"points", label:"العقوبة/النقاط" },
           { key:"notes", label:"ملاحظات" }
         ];
         renderTable("tbl", columns, data.rows || []);
