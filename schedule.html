@@ -20,35 +20,27 @@
         <div class="infoItem"><div class="k">المرشد الأكاديمي</div><div class="v" id="vAdvisor">-</div></div>
       </div>
 
-      <div class="error" id="errBox"></div>
+      <div class="error" id="errBox" style="display:none;"></div>
 
       <div class="tableWrap">
-        <table id="tbl">
-          <thead></thead>
-          <tbody></tbody>
-        </table>
+        <table id="tbl"><thead></thead><tbody></tbody></table>
       </div>
 
       <div class="hint">يعرض جدول المتدرب من ملف البيانات</div>
     </div>
   </div>
 
-  <script src="assets/app.js"></script>
+  <script src="assets/app.js?v=20260206"></script>
   <script>
-    renderHeaderSession();
+    fillHeaderFromSession();
     qs("btnHome").addEventListener("click", ()=> window.location.href="dashboard.html");
 
     (async function(){
-      showError("errBox","");
       const s = requireSession(); if(!s) return;
       try{
         const data = await getSchedule(s.id);
-        if(!data?.ok){
-          showError("errBox", data?.message || "تعذر جلب البيانات.");
-          renderTable("tbl", [{key:"x",label:""}], []);
-          return;
-        }
-        // أعمدة الجدول (غيّرها حسب شيتك)
+        if(!data?.ok){ showError("errBox", data?.message || "تعذر جلب البيانات."); return; }
+
         const columns = [
           { key:"day", label:"اليوم" },
           { key:"time", label:"الوقت" },
