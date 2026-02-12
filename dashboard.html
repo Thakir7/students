@@ -5,28 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>الخدمات</title>
   <link rel="stylesheet" href="assets/style.css">
-
-  <!-- ✅ FIX: منع أي طبقات فوقية من تعطيل النقر + رفع الأزرار فوق كل شيء -->
   <style>
-    /* تعطيل أي pseudo overlay فوق الصفحة */
-    body::before, body::after,
-    .app::before, .app::after,
-    .card::before, .card::after {
-      pointer-events: none !important;
-    }
-
-    /* تأكيد أن محتوى البطاقة والأزرار قابلة للنقر */
-    .card, .gridBtns, .bigBtn, a.bigBtn, button.bigBtn {
-      pointer-events: auto !important;
-    }
-
-    /* رفع الأزرار فوق أي طبقة */
-    .card { position: relative; z-index: 5; }
-    .gridBtns { position: relative; z-index: 6; }
-    .bigBtn { position: relative; z-index: 7; cursor: pointer; }
+    body::before, body::after, .app::before, .app::after, .card::before, .card::after{ pointer-events:none!important; }
+    .card,.gridBtns,.bigBtn{ pointer-events:auto!important; }
+    .card{ position:relative; z-index:5; }
+    .gridBtns{ position:relative; z-index:6; }
+    .bigBtn{ position:relative; z-index:7; cursor:pointer; }
   </style>
 </head>
-
 <body>
   <div class="app">
     <div class="topBar">
@@ -36,21 +22,11 @@
 
     <div class="card">
       <div class="infoBox">
-        <div class="infoItem">
-          <div class="k">اسم المتدرب</div>
-          <div class="v" id="vName">-</div>
-        </div>
-        <div class="infoItem">
-          <div class="k">الرقم التدريبي</div>
-          <div class="v" id="vId">-</div>
-        </div>
-        <div class="infoItem">
-          <div class="k">المرشد الأكاديمي</div>
-          <div class="v" id="vAdvisor">-</div>
-        </div>
+        <div class="infoItem"><div class="k">اسم المتدرب</div><div class="v" id="vName">-</div></div>
+        <div class="infoItem"><div class="k">الرقم التدريبي</div><div class="v" id="vId">-</div></div>
+        <div class="infoItem"><div class="k">المرشد الأكاديمي</div><div class="v" id="vAdvisor">-</div></div>
       </div>
 
-      <!-- ✅ أزرار الخدمات -->
       <div class="gridBtns">
         <button class="bigBtn" data-go="schedule.html">الجدول</button>
         <button class="bigBtn" data-go="activities.html">الأنشطة</button>
@@ -72,38 +48,30 @@
 
   <script src="assets/app.js?v=20260206"></script>
   <script>
-    // ✅ تأكد من وجود جلسة
-    const s = requireSession();
-    if (!s) throw new Error("no session");
-
-    // ✅ تعبئة الهيدر
+    const s = requireSession(); if (!s) throw new Error("no session");
     fillHeaderFromSession();
 
-    // ✅ تحديث بيانات المتدرب مرة واحدة
     (async ()=>{
       try{
         const fresh = await searchTraineeById(s.id);
         if (fresh) { saveSession(fresh); fillHeaderFromSession(); }
-      }catch(e){
-        console.error(e);
-      }
+      }catch(e){ console.error(e); }
     })();
 
-    // ✅ تسجيل خروج
     qs("btnLogout").addEventListener("click", ()=>{
       clearSession();
       location.replace("index.html");
     });
 
-    // ✅ FIX قاطع: ربط ضغط الأزرار مباشرة بالانتقال
-    document.querySelectorAll(".bigBtn[data-go]").forEach(btn=>{
-      btn.addEventListener("click", (e)=>{
-        e.preventDefault();
-        e.stopPropagation();
-        const go = btn.getAttribute("data-go");
-        if (go) window.location.href = go;
-      });
-    });
+    // ✅ فتح الصفحات مباشرة + إلغاء أي كود قديم يطبع "تم اختيار خدمة..."
+    document.addEventListener("click", function(e){
+      const btn = e.target.closest(".bigBtn[data-go]");
+      if(!btn) return;
+      e.preventDefault();
+      e.stopPropagation();
+      if (e.stopImmediatePropagation) e.stopImmediatePropagation();
+      window.location.href = btn.getAttribute("data-go");
+    }, true);
   </script>
 </body>
 </html>
